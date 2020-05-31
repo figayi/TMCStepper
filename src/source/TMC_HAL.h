@@ -55,6 +55,33 @@
         typedef TMCPin InputPin;
     }
 
+#elif defined(TARGET_LPC1768)
+
+    namespace TMCStepper_n {
+
+        typedef uint16_t PinDef;
+
+        class TMCPin {
+        public:
+            explicit TMCPin(const uint16_t _pin) : pin(_pin) {}
+            void mode(const uint8_t mode);
+            bool read() const;
+            operator bool() const { return read(); }
+            operator uint16_t() const { return pin; }
+        protected:
+            uint16_t const pin;
+            static constexpr uint8_t pinDelay = 60;
+        };
+
+        class OutputPin : public TMCPin {
+        public:
+            OutputPin(const uint16_t _pin) : TMCPin(_pin) {}
+            void write(const bool state) const;
+        };
+
+        typedef TMCPin InputPin;
+    }
+
 #endif
 
 #ifndef HIGH
